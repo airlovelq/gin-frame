@@ -34,12 +34,12 @@ func test(c *gin.Context) {
 func StartService() {
 	r := gin.Default()
 	// r.Use(middle1)
-
+	r.Use(Cors())
 	r.Use(response.ErrorHandler)
 	r.NoMethod(response.HandleNotFound)
 	r.NoRoute(response.HandleNotFound)
 	r.GET("/test", test)
 	// r.GET("/ping", secret.TokenServiceHandler(getStudent))
 	// r.Use(middle2)
-	r.Run(":8080") // listen and serve on 0.0.0.0:8080
+	r.Run(":8082") // listen and serve on 0.0.0.0:8080
 }
