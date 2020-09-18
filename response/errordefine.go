@@ -8,9 +8,10 @@ import (
 
 // 错误处理的结构体
 type Response struct {
-	StatusCode int    `json:"-"`
-	Code       int    `json:"code"`
-	Msg        string `json:"msg"`
+	StatusCode int         `json:"-"`
+	Code       int         `json:"code"`
+	Msg        string      `json:"msg"`
+	Data       interface{} `json:"data"`
 }
 
 type Error struct {
@@ -31,6 +32,7 @@ func NewError(statusCode, Code int, msg string) *Error {
 			StatusCode: statusCode,
 			Code:       Code,
 			Msg:        msg,
+			Data:       nil,
 		},
 	}
 }

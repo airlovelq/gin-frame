@@ -4,10 +4,11 @@ import (
 	"net/http"
 )
 
-func NewSuccess(msg string) *Response {
+func NewSuccess(data interface{}) *Response {
 	return &Response{
 		StatusCode: http.StatusOK,
-		Msg:        msg,
+		Msg:        "Success",
 		Code:       0,
+		Data:       data,
 	}
 }

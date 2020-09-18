@@ -9,10 +9,11 @@ import (
 
 func test(c *gin.Context) {
 	fmt.Println("test")
-	panic(response.ServerError)
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
+	// panic(response.ServerError)
+	data := make(map[string]interface{})
+	data["j"] = "k"
+	res := response.NewSuccess(data)
+	c.JSON(res.StatusCode, res)
 }
 
 // func getStudent(c *gin.Context, tokenMap map[string]interface{}) {
