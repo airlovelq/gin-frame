@@ -11,13 +11,13 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @获取指定ID记录
-// @Description get record by ID
+// @Summary 测试接口
+// @Description Test Swagger
 // @Accept  json
 // @Produce json
 // @Param   some_id     path    int     true        "userId"
 // @Success 200 {string} string	"ok"
-// @Router /record/{some_id} [get]
+// @Router /test [get]
 func test(c *gin.Context) {
 	fmt.Println("test")
 	// panic(response.ServerError)
@@ -27,26 +27,6 @@ func test(c *gin.Context) {
 	c.JSON(res.StatusCode, res)
 }
 
-// func getStudent(c *gin.Context, tokenMap map[string]interface{}) {
-// 	// panic(response.ServerError)
-// 	c.JSON(200, gin.H{
-// 		"message": "pong",
-// 	})
-// }
-
-// func middle1(c *gin.Context) {
-// 	defer fmt.Println("1")
-// 	c.Next()
-// }
-
-// func middle2(c *gin.Context) {
-// 	fmt.Println("2")
-// }
-
-// @title 测试
-// @version 0.0.1
-// @description  测试
-// @BasePath /api/v1/
 func StartService() {
 	r := gin.Default()
 	// r.Use(middle1)

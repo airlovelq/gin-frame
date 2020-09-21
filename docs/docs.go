@@ -18,22 +18,29 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {},
-        "license": {},
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/record/{some_id}": {
+        "/test": {
             "get": {
-                "description": "get record by ID",
+                "description": "Test Swagger",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
+                "summary": "测试接口",
                 "parameters": [
                     {
                         "type": "integer",
@@ -68,11 +75,11 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.0.1",
-	Host:        "",
-	BasePath:    "/api/v1/",
+	Host:        "127.0.0.1:9009",
+	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "测试",
-	Description: "测试",
+	Title:       "框架接口",
+	Description: "接口文档",
 }
 
 type s struct{}

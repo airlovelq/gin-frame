@@ -1,23 +1,30 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "测试",
-        "title": "测试",
-        "contact": {},
-        "license": {},
+        "description": "接口文档",
+        "title": "框架接口",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "0.0.1"
     },
-    "basePath": "/api/v1/",
+    "host": "127.0.0.1:9009",
     "paths": {
-        "/record/{some_id}": {
+        "/test": {
             "get": {
-                "description": "get record by ID",
+                "description": "Test Swagger",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
+                "summary": "测试接口",
                 "parameters": [
                     {
                         "type": "integer",
