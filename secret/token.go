@@ -3,7 +3,7 @@ package secret
 import (
 	"net/http"
 	"reflect"
-	"scoremanager/response"
+	"scoremanager/errorcode"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -54,7 +54,7 @@ func TokenServiceHandler(f func(c *gin.Context, tokenMap map[string]interface{})
 	return func(c *gin.Context) {
 		tokenMap, err := ParseToken(c.Request)
 		if err != nil {
-			panic(response.TokenError)
+			panic(errorcode.TokenError)
 		}
 		f(c, tokenMap)
 	}

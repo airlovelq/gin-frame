@@ -2,9 +2,10 @@ package service
 
 import (
 	"fmt"
-	"scoremanager/response"
-
 	_ "scoremanager/docs"
+	"scoremanager/errorcode"
+	"scoremanager/response"
+	"scoremanager/secret"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -31,10 +32,19 @@ func StartService() {
 	r := gin.Default()
 	// r.Use(middle1)
 	r.Use(Cors())
-	r.Use(response.ErrorHandler)
-	r.NoMethod(response.HandleNotFound)
-	r.NoRoute(response.HandleNotFound)
+	r.Use(errorcode.ErrorHandler)
+	r.NoMethod(errorcode.HandleNotFound)
+	r.NoRoute(errorcode.HandleNotFound)
 	r.GET("/test", test)
+	r.POST("/user/login", login)
+	r.POST("/user/register/email/validate", sendEmailRegisterValidateCode)
+	r.POST("/user/register/email", registerByEmail)
+	r.POST("/user/password/reset", secret.TokenServiceHandler(resetPasswordInLoginStatus))
+	r.POST("/user/password/reset/email/validate", sendEmailResetPasswordValidateCode)
+	r.POST("/user/password/reset/email", resetPasswordByEmail)
+	r.POST("/user/email/reset", secret.TokenServiceHandler(resetEmail))
+	r.POST("/user/email/reset/validate", secret.TokenServiceHandler(sendResetEmailValidateCode))
+	r.POST("/user/info", secret.TokenServiceHandler(editUserInfo))
 	// url := ginSwagger.URL("http://192.168.2.89:8082/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// r.GET("/ping", secret.TokenServiceHandler(getStudent))
