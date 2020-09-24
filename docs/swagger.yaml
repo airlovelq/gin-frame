@@ -8,7 +8,53 @@ definitions:
       msg:
         type: string
     type: object
-host: 127.0.0.1:9009
+  service.emailParams:
+    properties:
+      email:
+        type: string
+    type: object
+  service.loginParams:
+    properties:
+      log_id:
+        type: string
+      password_encrypt:
+        type: string
+    type: object
+  service.passwordEncryptParams:
+    properties:
+      password_encrypt:
+        type: string
+    type: object
+  service.registerOrResetPasswordByEmailParams:
+    properties:
+      email:
+        type: string
+      password_encrypt:
+        type: string
+      validate_code:
+        type: string
+    type: object
+  service.resetEmailParams:
+    properties:
+      email:
+        type: string
+      validate_code:
+        type: string
+    type: object
+  service.userInfoParams:
+    properties:
+      age:
+        type: string
+      info:
+        type: string
+      name:
+        type: string
+      sex:
+        type: string
+      user_name:
+        type: string
+    type: object
+host: 192.168.2.89:8082
 info:
   contact:
     name: API Support
@@ -45,29 +91,33 @@ paths:
       - application/json
       description: 重置邮箱，根据邮件中验证码
       parameters:
-      - description: email
+      - description: email,validate_code
         in: body
-        name: email
+        name: params
         required: true
         schema:
-          type: string
-      - description: 验证码
-        in: body
-        name: validate_code
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/service.resetEmailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 重置邮箱
   /user/email/reset/validate:
     post:
@@ -77,21 +127,31 @@ paths:
       parameters:
       - description: email
         in: body
-        name: email
+        name: params
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/service.emailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 发送重置邮箱验证码邮件
   /user/info:
     post:
@@ -99,42 +159,33 @@ paths:
       - application/json
       description: 编辑用户信息
       parameters:
-      - description: "0"
+      - description: sex:0男，1女，2保密 age:年龄 user_name:用户名，昵称 name:实际姓名 info:其他信息
         in: body
-        name: sex
+        name: params
+        required: true
         schema:
-          type: integer
-      - description: "20"
-        in: body
-        name: age
-        schema:
-          type: integer
-      - description: haha
-        in: body
-        name: user_name
-        schema:
-          type: string
-      - description: haha
-        in: body
-        name: name
-        schema:
-          type: string
-      - description: other info
-        in: body
-        name: info
-        schema:
-          type: string
+          $ref: '#/definitions/service.userInfoParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: 调用成功 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 编辑用户信息
   /user/login:
     post:
@@ -142,27 +193,29 @@ paths:
       - application/json
       description: 登录接口，通过email，手机号或用户名
       parameters:
-      - description: email，手机号或用户名
+      - description: log_id:email，手机号或用户名 password_encrypt:加密后的密码
         in: body
-        name: log_id
+        name: params
         required: true
         schema:
-          type: string
-      - description: 密码（加密过的）
-        in: body
-        name: password_encrypt
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/service.loginParams'
       produces:
       - application/json
       responses:
         "200":
-          description: code":200,"data":{"token":"token"},"msg":""}
+          description: Success data为{\"token\":token, \"user_id\":user id}
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
       summary: 登录
@@ -174,21 +227,31 @@ paths:
       parameters:
       - description: 密码（加密过的）
         in: body
-        name: password_encrypt
+        name: params
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/service.passwordEncryptParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 重置密码（已登录状态）
   /user/password/reset/email:
     post:
@@ -198,31 +261,27 @@ paths:
       parameters:
       - description: email
         in: body
-        name: email
+        name: params
         required: true
         schema:
-          type: string
-      - description: 密码（加密过的）
-        in: body
-        name: password_encrypt
-        required: true
-        schema:
-          type: string
-      - description: 验证码
-        in: body
-        name: validate_code
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/service.registerOrResetPasswordByEmailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
       summary: 重置密码（发送邮件方式）
@@ -233,19 +292,28 @@ paths:
       description: 邮件发送重置密码验证码
       parameters:
       - description: 邮箱
-        in: query
-        name: email
+        in: body
+        name: params
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.emailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件发送重置密码验证码
@@ -257,31 +325,27 @@ paths:
       parameters:
       - description: 邮箱
         in: body
-        name: email
+        name: params
         required: true
         schema:
-          type: string
-      - description: 验证码
-        in: body
-        name: validate_code
-        required: true
-        schema:
-          type: string
-      - description: 密码（加密过的）
-        in: body
-        name: password_encrypt
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/service.registerOrResetPasswordByEmailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: 'Success data为{\"id": user id}'
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件注册
@@ -292,20 +356,34 @@ paths:
       description: 邮件发送注册验证码
       parameters:
       - description: 邮箱
-        in: query
-        name: email
+        in: body
+        name: params
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/service.emailParams'
       produces:
       - application/json
       responses:
         "200":
-          description: Success
+          description: Success data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
           schema:
             $ref: '#/definitions/response.Response'
         "500":
-          description: Failure
+          description: 内部错误 data为null
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件发送注册验证码
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

@@ -10,6 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
+	"gopkg.in/guregu/null.v3"
 )
 
 type DatabaseOp struct {
@@ -111,14 +112,34 @@ func (dbOp *DatabaseOp) ResetEmailByID(userID string, email string) error {
 	return err
 }
 
-func (dbOp *DatabaseOp) UpdateUserInfo(userID string, infos map[string]interface{}) error {
+func (dbOp *DatabaseOp) UpdateUserInfo(userID string, sex null.Int, age null.Int, userName null.String, name null.String, info null.String) error {
 	sqlstr := "UPDATE user_platform SET "
 	count := 0
 	values := make([]interface{}, 0)
-	for k, v := range infos {
+	if sex.Valid {
 		count++
-		sqlstr += fmt.Sprintf("%s=$%d, ", k, count)
-		values = append(values, v)
+		sqlstr += fmt.Sprintf("sex=$%d, ", count)
+		values = append(values, sex)
+	}
+	if age.Valid {
+		count++
+		sqlstr += fmt.Sprintf("age=$%d, ", count)
+		values = append(values, age)
+	}
+	if userName.Valid {
+		count++
+		sqlstr += fmt.Sprintf("user_name=$%d, ", count)
+		values = append(values, userName)
+	}
+	if name.Valid {
+		count++
+		sqlstr += fmt.Sprintf("name=$%d, ", count)
+		values = append(values, name)
+	}
+	if info.Valid {
+		count++
+		sqlstr += fmt.Sprintf("info=$%d, ", count)
+		values = append(values, info)
 	}
 	sqlstr += fmt.Sprintf("operator=$%d WHERE id=$%d", count+1, count+2)
 	values = append(values, userID)

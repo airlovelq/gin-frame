@@ -62,6 +62,11 @@ var doc = `{
         },
         "/user/email/reset": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "重置邮箱，根据邮件中验证码",
                 "consumes": [
                     "application/json"
@@ -72,33 +77,36 @@ var doc = `{
                 "summary": "重置邮箱",
                 "parameters": [
                     {
-                        "description": "email",
-                        "name": "email",
+                        "description": "email,validate_code",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "验证码",
-                        "name": "validate_code",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.resetEmailParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -108,6 +116,11 @@ var doc = `{
         },
         "/user/email/reset/validate": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "发送重置邮箱验证码邮件",
                 "consumes": [
                     "application/json"
@@ -119,23 +132,35 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "email",
-                        "name": "email",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.emailParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -145,6 +170,11 @@ var doc = `{
         },
         "/user/info": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "编辑用户信息",
                 "consumes": [
                     "application/json"
@@ -155,55 +185,36 @@ var doc = `{
                 "summary": "编辑用户信息",
                 "parameters": [
                     {
-                        "description": "0",
-                        "name": "sex",
+                        "description": "sex:0男，1女，2保密 age:年龄 user_name:用户名，昵称 name:实际姓名 info:其他信息",
+                        "name": "params",
                         "in": "body",
+                        "required": true,
                         "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "20",
-                        "name": "age",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "haha",
-                        "name": "user_name",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "haha",
-                        "name": "name",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "other info",
-                        "name": "info",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.userInfoParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "调用成功 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -223,33 +234,36 @@ var doc = `{
                 "summary": "登录",
                 "parameters": [
                     {
-                        "description": "email，手机号或用户名",
-                        "name": "log_id",
+                        "description": "log_id:email，手机号或用户名 password_encrypt:加密后的密码",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "密码（加密过的）",
-                        "name": "password_encrypt",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.loginParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "code\":200,\"data\":{\"token\":\"token\"},\"msg\":\"\"}",
+                        "description": "Success data为{\\\"token\\\":token, \\\"user_id\\\":user id}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -259,6 +273,11 @@ var doc = `{
         },
         "/user/password/reset": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "重置密码（已登录状态）",
                 "consumes": [
                     "application/json"
@@ -270,23 +289,35 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "密码（加密过的）",
-                        "name": "password_encrypt",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.passwordEncryptParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -307,41 +338,35 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "email",
-                        "name": "email",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "密码（加密过的）",
-                        "name": "password_encrypt",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "验证码",
-                        "name": "validate_code",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.registerOrResetPasswordByEmailParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -361,22 +386,36 @@ var doc = `{
                 "summary": "邮件发送重置密码验证码",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "邮箱",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.emailParams"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -397,41 +436,35 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "邮箱",
-                        "name": "email",
+                        "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "验证码",
-                        "name": "validate_code",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "密码（加密过的）",
-                        "name": "password_encrypt",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.registerOrResetPasswordByEmailParams"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为{\\\"id\": user id}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -451,22 +484,36 @@ var doc = `{
                 "summary": "邮件发送注册验证码",
                 "parameters": [
                     {
-                        "type": "string",
                         "description": "邮箱",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.emailParams"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "Success data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
-                        "description": "Failure",
+                        "description": "内部错误 data为null",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -489,6 +536,85 @@ var doc = `{
                     "type": "string"
                 }
             }
+        },
+        "service.emailParams": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.loginParams": {
+            "type": "object",
+            "properties": {
+                "log_id": {
+                    "type": "string"
+                },
+                "password_encrypt": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.passwordEncryptParams": {
+            "type": "object",
+            "properties": {
+                "password_encrypt": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.registerOrResetPasswordByEmailParams": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password_encrypt": {
+                    "type": "string"
+                },
+                "validate_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.resetEmailParams": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "validate_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.userInfoParams": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "string"
+                },
+                "info": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
@@ -505,7 +631,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.0.1",
-	Host:        "127.0.0.1:9009",
+	Host:        "192.168.2.89:8082",
 	BasePath:    "",
 	Schemes:     []string{},
 	Title:       "框架接口",

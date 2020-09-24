@@ -9,6 +9,8 @@ import (
 	"scoremanager/secret"
 	"scoremanager/utils"
 
+	"gopkg.in/guregu/null.v3"
+
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -163,6 +165,11 @@ func (op *UserOp) RegisterByPhone(phone string, validateCode string, passwordEnc
 }
 
 func (op *UserOp) SendEmailResetPasswordValidateCode(email string) *response.Response {
+	defer op.EndOp()
+	_, err := op.DbOp.GetUserByEmail(email)
+	if err != nil {
+		panic(errorcode.UserNotExistError)
+	}
 	validateCode := uuid.NewV4().String()
 	emailContent := "<p>Hi,</p> <p style=\"text-indent:2em;\">Welcome to reset password for Platform user.</p> <p style=\"text-indent:2em;\">Your validation code is </p> <p style=\"text-indent:2em;color:red\"><B>" + validateCode +
 		"</B></p> <p style=\"text-indent:2em;\">The validation code will expire after 1 hours. If expires, retrieve it again.</p> <p style=\"text-indent:16em;\"> ------ Platform </p>"
@@ -189,7 +196,7 @@ func (op *UserOp) ResetPasswordByEmailValidateCode(email string, validateCode st
 	defer op.EndOp()
 	_, err := op.DbOp.GetUserByEmail(email)
 	if err != nil {
-		panic(errorcode.UserAlreadyExistError)
+		panic(errorcode.UserNotExistError)
 	}
 	resetCacheKey := resetNamespace + ":password:" + email
 	op.checkValidateCode(resetCacheKey, validateCode)
@@ -256,12 +263,12 @@ func (op *UserOp) sendResetPhoneMsg(source string, stype string, phone string) {
 
 }
 
-func (op *UserOp) EditUserInfo(userID string, infos map[string]interface{}) *response.Response {
+func (op *UserOp) EditUserInfo(userID string, sex null.Int, age null.Int, userName null.String, name null.String, info null.String) *response.Response {
 	defer op.EndOp()
-	// phone email必须使用验证码编辑的接口
-	delete(infos, "phone")
-	delete(infos, "email")
-	if err := op.DbOp.UpdateUserInfo(userID, infos); err != nil {
+	// // phone email必须使用验证码编辑的接口
+	// delete(infos, "phone")
+	// delete(infos, "email")
+	if err := op.DbOp.UpdateUserInfo(userID, sex, age, userName, name, info); err != nil {
 		panic(errorcode.UpdateUserInfoError)
 	}
 	return response.NewSuccess(nil)
