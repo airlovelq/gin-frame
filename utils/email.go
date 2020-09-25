@@ -18,9 +18,9 @@ func SendMail(mailTo string, subject string, body string) error {
 	//}
 
 	mailConn := map[string]string{
-		"user": GetEnvDefault("Sugar_EMAIL", "qin.lu@nusri.cn"),
-		"pass": GetEnvDefault("Sugar_EMAIL_PASSWORD", "Lu900212"),
-		"host": GetEnvDefault("Sugar_EMAIL_HOST", "smtp.qiye.163.com"),
+		"user": GetEnvDefault("Sugar_EMAIL", "email"),
+		"pass": GetEnvDefault("Sugar_EMAIL_PASSWORD", "password"),
+		"host": GetEnvDefault("Sugar_EMAIL_HOST", "email.com"),
 		"port": GetEnvDefault("Sugar_EMAIL_PORT", "25"),
 	}
 
