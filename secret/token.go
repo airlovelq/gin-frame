@@ -15,11 +15,12 @@ const (
 	SecretKey = "ScoreManager"
 )
 
-func GenerateToken(user_id string) (string, error) {
+func GenerateToken(userID string, userType int) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(10)).Unix()
 	claims["iat"] = time.Now().Unix()
-	claims["user_id"] = user_id
+	claims["user_id"] = userID
+	claims["user_type"] = userType
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	stoken, err := token.SignedString([]byte(SecretKey))
 	return stoken, err

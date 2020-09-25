@@ -14,7 +14,7 @@ type User struct {
 	Sex           null.Int     `json:"sex"`
 	Age           null.Int     `json:"age"`
 	Info          null.String  `json:"info"`
-	Password_Hash []byte       `-`
+	Password_Hash []byte       `json:"-"`
 	User_Type     int          `json:"user_type"`
 	Create_Date   jsonTime     `json:"create_date"`
 	Operate_Date  jsonTime     `json:"operate_time"`

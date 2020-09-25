@@ -56,19 +56,15 @@ func checkPassword(passwordEncrypt string, keyFile string, passwordHash []byte) 
 }
 
 type UserOp struct {
-	controller.BaseOp
+	*controller.BaseOp
 	// cacheOp cache.CacheOp
 	// dbOp    *database.DatabaseOp
 }
 
 func NewUserOp() *UserOp {
 	userOp := UserOp{
-		BaseOp: controller.BaseOp{
-			DbOp:    database.NewDatabaseOp(),
-			CacheOp: cache.NewCacheOp(),
-		},
+		BaseOp: controller.NewBaseOp(),
 	}
-	_ = userOp.DbOp.Begin()
 	return &userOp
 }
 
@@ -87,6 +83,8 @@ func (op *UserOp) checkValidateCode(cacheKey string, validateCode string) {
 }
 
 func (op *UserOp) Login(logID string, passwordEncrypt string) *response.Response {
+	op.BeginOp()
+	defer op.EndOp()
 	var user database.User
 	var err error
 	if utils.IsEmail(logID) {
@@ -106,7 +104,7 @@ func (op *UserOp) Login(logID string, passwordEncrypt string) *response.Response
 	if err != nil {
 		panic(errorcode.PasswordNotMatch)
 	}
-	token, err := secret.GenerateToken(user.ID.String())
+	token, err := secret.GenerateToken(user.ID.String(), user.User_Type)
 	resdata := make(map[string]interface{})
 	resdata["user_id"] = user.ID
 	resdata["token"] = token
@@ -114,6 +112,11 @@ func (op *UserOp) Login(logID string, passwordEncrypt string) *response.Response
 }
 
 func (op *UserOp) SendEmailRegisterValidateCode(email string) *response.Response {
+	op.BeginOp()
+	defer op.EndOp()
+	if _, err := op.DbOp.GetUserByEmail(email); err == nil {
+		panic(errorcode.UserAlreadyExistError)
+	}
 	registerDeadlineCacheKey := registerDeadlineNamespace + ":email:" + email
 	dl, err := op.CacheOp.Get(registerDeadlineCacheKey)
 	if dl != nil {
@@ -142,6 +145,7 @@ func (op *UserOp) SendPhoneRegisterValidateCode(email string) error {
 }
 
 func (op *UserOp) RegisterByEmail(email string, validateCode string, passwordEncrypt string) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	_, err := op.DbOp.GetUserByEmail(email)
 	if err == nil {
@@ -165,6 +169,7 @@ func (op *UserOp) RegisterByPhone(phone string, validateCode string, passwordEnc
 }
 
 func (op *UserOp) SendEmailResetPasswordValidateCode(email string) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	_, err := op.DbOp.GetUserByEmail(email)
 	if err != nil {
@@ -182,6 +187,7 @@ func (op *UserOp) SendPhoneResetPasswordValidateCode(email string) error {
 }
 
 func (op *UserOp) ResetPasswordInLoginStatus(userID string, passwordEncrypt string) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	passwordhash, err := getPasswordHash(passwordEncrypt, utils.GetEnvDefault("PRIVATE_KEY_PATH", "/home/luqin")+"/private.pem")
 
@@ -193,6 +199,7 @@ func (op *UserOp) ResetPasswordInLoginStatus(userID string, passwordEncrypt stri
 }
 
 func (op *UserOp) ResetPasswordByEmailValidateCode(email string, validateCode string, passwordEncrypt string) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	_, err := op.DbOp.GetUserByEmail(email)
 	if err != nil {
@@ -214,6 +221,8 @@ func (op *UserOp) ResetPasswordByPhoneValidateCode(phone string, validateCode st
 }
 
 func (op *UserOp) SendResetEmailValidateCode(userID string, email string) *response.Response {
+	op.BeginOp(controller.NotUseDBOption)
+	defer op.EndOp()
 	validateCode := uuid.NewV4().String()
 	emailContent := "<p>Hi,</p> <p style=\"text-indent:2em;\">Welcome to reset email for Platform user.</p> <p style=\"text-indent:2em;\">Your validation code is </p> <p style=\"text-indent:2em;color:red\"><B>" + validateCode +
 		"</B></p> <p style=\"text-indent:2em;\">The validation code will expire after 1 hours. If expires, retrieve it again.</p> <p style=\"text-indent:16em;\"> ------ Platform </p>"
@@ -222,6 +231,7 @@ func (op *UserOp) SendResetEmailValidateCode(userID string, email string) *respo
 }
 
 func (op *UserOp) ResetEmail(userID string, email string, validateCode string) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	resetCacheKey := resetNamespace + ":email:" + userID + ":" + email
 	op.checkValidateCode(resetCacheKey, validateCode)
@@ -264,6 +274,7 @@ func (op *UserOp) sendResetPhoneMsg(source string, stype string, phone string) {
 }
 
 func (op *UserOp) EditUserInfo(userID string, sex null.Int, age null.Int, userName null.String, name null.String, info null.String) *response.Response {
+	op.BeginOp()
 	defer op.EndOp()
 	// // phone email必须使用验证码编辑的接口
 	// delete(infos, "phone")
@@ -272,4 +283,14 @@ func (op *UserOp) EditUserInfo(userID string, sex null.Int, age null.Int, userNa
 		panic(errorcode.UpdateUserInfoError)
 	}
 	return response.NewSuccess(nil)
+}
+
+func (op *UserOp) GetUserInfo(userID string) *response.Response {
+	op.BeginOp()
+	defer op.EndOp()
+	if user, err := op.DbOp.GetUserByUserID(userID); err != nil {
+		panic(errorcode.UpdateUserInfoError)
+	} else {
+		return response.NewSuccess(user)
+	}
 }

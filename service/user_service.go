@@ -43,6 +43,7 @@ type userInfoParams struct {
 
 // @Summary 邮件发送注册验证码
 // @Description 邮件发送注册验证码
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @Param   params     body    emailParams     true        "邮箱"
@@ -69,6 +70,7 @@ func sendEmailRegisterValidateCode(c *gin.Context) {
 
 // @Summary 邮件发送重置密码验证码
 // @Description 邮件发送重置密码验证码
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @Param   params     body    emailParams     true        "邮箱"
@@ -95,6 +97,7 @@ func sendEmailResetPasswordValidateCode(c *gin.Context) {
 
 // @Summary 邮件注册
 // @Description 邮件注册
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @Param   params     body    registerOrResetPasswordByEmailParams     true        "邮箱"
@@ -123,6 +126,7 @@ func registerByEmail(c *gin.Context) {
 
 // @Summary 重置密码（已登录状态）
 // @Description 重置密码（已登录状态）
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @security ApiKeyAuth
@@ -149,6 +153,7 @@ func resetPasswordInLoginStatus(c *gin.Context, tokenMap map[string]interface{})
 
 // @Summary 登录
 // @Description 登录接口，通过email，手机号或用户名
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @Param   params  body loginParams true "log_id:email，手机号或用户名 password_encrypt:加密后的密码"
@@ -174,6 +179,7 @@ func login(c *gin.Context) {
 
 // @Summary 重置密码（发送邮件方式）
 // @Description 重置密码（发送邮件方式），根据邮件中验证码
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @Param   params  body registerOrResetPasswordByEmailParams true "email"
@@ -199,6 +205,7 @@ func resetPasswordByEmail(c *gin.Context) {
 
 // @Summary 重置邮箱
 // @Description 重置邮箱，根据邮件中验证码
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @security ApiKeyAuth
@@ -225,6 +232,7 @@ func resetEmail(c *gin.Context, tokenMap map[string]interface{}) {
 
 // @Summary 发送重置邮箱验证码邮件
 // @Description 发送重置邮箱验证码邮件
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @security ApiKeyAuth
@@ -251,6 +259,7 @@ func sendResetEmailValidateCode(c *gin.Context, tokenMap map[string]interface{})
 
 // @Summary 编辑用户信息
 // @Description 编辑用户信息
+// @Tags 用户管理
 // @Accept  json
 // @Produce json
 // @security ApiKeyAuth
@@ -272,5 +281,26 @@ func editUserInfo(c *gin.Context, tokenMap map[string]interface{}) {
 	}
 	userOp := user.NewUserOp()
 	res := userOp.EditUserInfo(tokenMap["user_id"].(string), jsonParams.Sex, jsonParams.Age, jsonParams.User_Name, jsonParams.Name, jsonParams.Info)
+	c.JSON(res.StatusCode, res)
+}
+
+// @Summary 获取用户信息
+// @Description 获取用户信息
+// @Tags 用户管理
+// @Accept  json
+// @Produce json
+// @security ApiKeyAuth
+// @Success 200  {object}  response.Response  "调用成功 data为null"
+// @Failure 500  {object}  response.Response  "内部错误 data为null"
+// @Failure 401  {object}  response.Response  "token错误 data为null"
+// @Failure 404  {object}  response.Response  "无法访问 data为null"
+// @Router /user/info [get]
+func getUserInfo(c *gin.Context, tokenMap map[string]interface{}) {
+	paramOk := utils.CheckUUID4MustExist(tokenMap["user_id"])
+	if !paramOk {
+		panic(errorcode.ParamError)
+	}
+	userOp := user.NewUserOp()
+	res := userOp.GetUserInfo(tokenMap["user_id"].(string))
 	c.JSON(res.StatusCode, res)
 }

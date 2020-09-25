@@ -60,11 +60,17 @@ func (dbOp *DatabaseOp) Begin() error {
 }
 
 func (dbOp *DatabaseOp) Rollback() error {
-	return dbOp.tx.Rollback()
+	if dbOp.tx != nil {
+		return dbOp.tx.Rollback()
+	}
+	return nil
 }
 
 func (dbOp *DatabaseOp) Commit() error {
-	return dbOp.tx.Commit()
+	if dbOp.tx != nil {
+		return dbOp.tx.Commit()
+	}
+	return nil
 }
 
 func (dbOp *DatabaseOp) GetUserByEmail(email string) (User, error) {
@@ -83,6 +89,13 @@ func (dbOp *DatabaseOp) GetUserByPhone(phone string) (User, error) {
 
 func (dbOp *DatabaseOp) GetUserByUserName(userName string) (User, error) {
 	sqlresult := dbOp.tx.QueryRowx("SELECT * FROM user_platform WHERE user_name=$1", userName)
+	var u User
+	err := sqlresult.StructScan(&u)
+	return u, err
+}
+
+func (dbOp *DatabaseOp) GetUserByUserID(userID string) (User, error) {
+	sqlresult := dbOp.tx.QueryRowx("SELECT * FROM user_platform WHERE id=$1", userID)
 	var u User
 	err := sqlresult.StructScan(&u)
 	return u, err

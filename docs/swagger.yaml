@@ -119,6 +119,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 重置邮箱
+      tags:
+      - 用户管理
   /user/email/reset/validate:
     post:
       consumes:
@@ -153,7 +155,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 发送重置邮箱验证码邮件
+      tags:
+      - 用户管理
   /user/info:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 调用成功 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: token错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 无法访问 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 内部错误 data为null
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户信息
+      tags:
+      - 用户管理
     post:
       consumes:
       - application/json
@@ -187,6 +219,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 编辑用户信息
+      tags:
+      - 用户管理
   /user/login:
     post:
       consumes:
@@ -219,6 +253,8 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 登录
+      tags:
+      - 用户管理
   /user/password/reset:
     post:
       consumes:
@@ -253,6 +289,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 重置密码（已登录状态）
+      tags:
+      - 用户管理
   /user/password/reset/email:
     post:
       consumes:
@@ -285,6 +323,8 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 重置密码（发送邮件方式）
+      tags:
+      - 用户管理
   /user/password/reset/email/validate:
     post:
       consumes:
@@ -317,6 +357,8 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件发送重置密码验证码
+      tags:
+      - 用户管理
   /user/register/email:
     post:
       consumes:
@@ -349,6 +391,8 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件注册
+      tags:
+      - 用户管理
   /user/register/email/validate:
     post:
       consumes:
@@ -381,6 +425,8 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 邮件发送注册验证码
+      tags:
+      - 用户管理
 securityDefinitions:
   ApiKeyAuth:
     in: header

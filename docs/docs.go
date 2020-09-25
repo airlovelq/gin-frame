@@ -74,6 +74,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户管理"
+                ],
                 "summary": "重置邮箱",
                 "parameters": [
                     {
@@ -128,6 +131,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户管理"
+                ],
                 "summary": "发送重置邮箱验证码邮件",
                 "parameters": [
                     {
@@ -169,6 +175,50 @@ var doc = `{
             }
         },
         "/user/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "获取用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "获取用户信息",
+                "responses": {
+                    "200": {
+                        "description": "调用成功 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "token错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "无法访问 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "内部错误 data为null",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -181,6 +231,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户管理"
                 ],
                 "summary": "编辑用户信息",
                 "parameters": [
@@ -230,6 +283,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户管理"
                 ],
                 "summary": "登录",
                 "parameters": [
@@ -285,6 +341,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户管理"
+                ],
                 "summary": "重置密码（已登录状态）",
                 "parameters": [
                     {
@@ -333,6 +392,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户管理"
                 ],
                 "summary": "重置密码（发送邮件方式）",
                 "parameters": [
@@ -383,6 +445,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户管理"
+                ],
                 "summary": "邮件发送重置密码验证码",
                 "parameters": [
                     {
@@ -432,6 +497,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户管理"
+                ],
                 "summary": "邮件注册",
                 "parameters": [
                     {
@@ -480,6 +548,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户管理"
                 ],
                 "summary": "邮件发送注册验证码",
                 "parameters": [
