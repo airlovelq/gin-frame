@@ -1,25 +1,27 @@
 # gin-frame
 
 #### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+基于golang的gin框架，搭建的基础后端服务开发项目，可根据需要扩展，并快速开发直接编写业务
 
 #### 软件架构
-软件架构说明
 
+1. docs： swagger文档，通过gin-swagger生成
+2. controller：controller层文件，开发业务
+3. database： 数据库操作
+4. middleware： 中间件操作，目前只做了缓存redis的操作，可根据需要添加消息中间件等操作
+5. response： 设计的返回参数，code， data， msg三个字段
+6. errorcode： 错误码定义，可根据需要添加错误码
+7. utils： 一些公共函数，email发送，参数校验等，可根据需要添加和扩展
+8. secret： 加密解密相关操作，目前有jwt token解析和生成，rsa加密解密，base64等操作，可根据需要继续添加和扩展
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  安装gin-swagger，如果需要自动生成文档，可执行swag init生成文档
+2.  编译，运行
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  因为目前一般针对的项目都是用kubernetes部署的，所以很多配置都是用的环境变量来设置的
 
 #### 参与贡献
 
